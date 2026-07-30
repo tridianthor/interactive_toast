@@ -87,14 +87,15 @@ class _BannerOverlayWidgetState extends State<_BannerOverlayWidget>
 
   Timer? _timer;
   Duration _remainingDuration = Duration.zero;
+  DateTime? _startTime;
   double _dragOffset = 0;
   bool _isDragging = false;
   bool _isDismissing = false;
-
   @override
   void initState() {
     super.initState();
     _remainingDuration = widget.config.duration;
+    _startTime = DateTime.now();
     _initSlideAnimation();
     _initProgressAnimation();
     _slideController.forward();
@@ -137,15 +138,25 @@ class _BannerOverlayWidgetState extends State<_BannerOverlayWidget>
   void _pauseTimer() {
     _timer?.cancel();
     if (_progressController.isAnimating) {
-      _remainingDuration = _progressController.duration! * _progressController.value;
+      // Remaining = total duration * (1.0 - progress value)
+      final totalMs = _progressController.duration!.inMilliseconds;
+      final remainingMs = (totalMs * (1.0 - _progressController.value)).round();
+      _remainingDuration = Duration(milliseconds: remainingMs);
       _progressController.stop();
+    } else if (_startTime != null) {
+      // Timer-only path: calculate elapsed from stopwatch
+      final elapsed = DateTime.now().difference(_startTime!);
+      _remainingDuration = widget.config.duration - elapsed;
     }
   }
 
   void _resumeTimer() {
+    _startTime = DateTime.now();
     if (_remainingDuration > Duration.zero) {
-      _progressController.duration = _remainingDuration;
-      _progressController.forward(from: 0);
+      if (widget.config.showProgress) {
+        _progressController.duration = _remainingDuration;
+        _progressController.forward(from: 0);
+      }
       _timer = Timer(_remainingDuration, _handleAutoDismiss);
     }
   }
