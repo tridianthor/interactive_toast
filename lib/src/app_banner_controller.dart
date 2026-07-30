@@ -19,11 +19,12 @@ class AppBannerController {
   }
 
   /// Show a banner with the given message and config
-  void show(String message, {BannerConfig? config}) {
+  void show(BuildContext context, String message, {BannerConfig? config}) {
     _currentEntry?.dismiss();
     _currentEntry = AppBannerEntry(
       config: config ?? BannerConfig(message: message),
     );
+    _currentEntry!.show(context);
   }
 
   /// Dismiss the current banner
