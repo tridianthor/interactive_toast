@@ -287,15 +287,14 @@ class _BannerOverlayWidgetState extends State<_BannerOverlayWidget>
 
   void _onDragUpdate(DragUpdateDetails details) {
     setState(() {
-      _dragOffset += details.delta.dy;
-      if (_dragOffset < 0) _dragOffset = 0;
+      _dragOffset += details.delta.dy.abs();
     });
   }
 
   void _onDragEnd(DragEndDetails details) {
     final velocity = details.primaryVelocity ?? 0;
     final shouldDismiss = _dragOffset > AnimationUtils.swipeDismissThreshold ||
-                          velocity > AnimationUtils.swipeVelocityThreshold;
+                          velocity.abs() > AnimationUtils.swipeVelocityThreshold;
 
     if (shouldDismiss) {
       dismissWithAnimation();
@@ -304,7 +303,7 @@ class _BannerOverlayWidgetState extends State<_BannerOverlayWidget>
         _isDragging = false;
         _dragOffset = 0;
       });
-      _startTimer();
+      _resumeTimer();
     }
   }
 }
