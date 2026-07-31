@@ -91,6 +91,7 @@ class _BannerOverlayWidgetState extends State<_BannerOverlayWidget>
   double _dragOffset = 0;
   bool _isDragging = false;
   bool _isDismissing = false;
+
   @override
   void initState() {
     super.initState();
@@ -138,13 +139,11 @@ class _BannerOverlayWidgetState extends State<_BannerOverlayWidget>
   void _pauseTimer() {
     _timer?.cancel();
     if (_progressController.isAnimating) {
-      // Remaining = total duration * (1.0 - progress value)
       final totalMs = _progressController.duration!.inMilliseconds;
       final remainingMs = (totalMs * (1.0 - _progressController.value)).round();
       _remainingDuration = Duration(milliseconds: remainingMs);
       _progressController.stop();
     } else if (_startTime != null) {
-      // Timer-only path: calculate elapsed from stopwatch
       final elapsed = DateTime.now().difference(_startTime!);
       _remainingDuration = widget.config.duration - elapsed;
     }
@@ -218,70 +217,73 @@ class _BannerOverlayWidgetState extends State<_BannerOverlayWidget>
         ? (1.0 - (_dragOffset.abs() / 2000)).clamp(0.95, 1.0)
         : 1.0;
 
-    return Transform.translate(
-      offset: Offset(0, _dragOffset),
-      child: Opacity(
-        opacity: opacity,
-        child: Transform.scale(
-          scale: scale,
-          child: Container(
-            height: bannerHeight,
-            margin: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BannerStyle.buildDecoration(
-              backgroundColor: colorScheme.surface,
-              radius: BannerStyle.borderRadius,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Icon(
-                          widget.config.icon ?? widget.config.type.defaultIcon,
-                          color: bannerColor,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            widget.config.message,
-                            style: TextStyle(
-                              color: colorScheme.onSurface,
-                              fontSize: 14,
+    return Material(
+      type: MaterialType.transparency,
+      child: Transform.translate(
+        offset: Offset(0, _dragOffset),
+        child: Opacity(
+          opacity: opacity,
+          child: Transform.scale(
+            scale: scale,
+            child: Container(
+              height: bannerHeight,
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BannerStyle.buildDecoration(
+                backgroundColor: colorScheme.surface,
+                radius: BannerStyle.borderRadius,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Icon(
+                            widget.config.icon ?? widget.config.type.defaultIcon,
+                            color: bannerColor,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              widget.config.message,
+                              style: TextStyle(
+                                color: colorScheme.onSurface,
+                                fontSize: 14,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        if (widget.config.action != null)
-                          TextButton(
-                            onPressed: widget.config.action!.onTap,
-                            child: Text(widget.config.action!.label),
-                          ),
-                      ],
+                          if (widget.config.action != null)
+                            TextButton(
+                              onPressed: widget.config.action!.onTap,
+                              child: Text(widget.config.action!.label),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                if (widget.config.showProgress)
-                  SizedBox(
-                    height: 3,
-                    child: AnimatedBuilder(
-                      animation: _progressAnimation,
-                      builder: (context, child) {
-                        return LinearProgressIndicator(
-                          value: _progressAnimation.value,
-                          backgroundColor: Colors.transparent,
-                          valueColor: AlwaysStoppedAnimation(
-                            bannerColor.withAlpha(179),
-                          ),
-                        );
-                      },
+                  if (widget.config.showProgress)
+                    SizedBox(
+                      height: 3,
+                      child: AnimatedBuilder(
+                        animation: _progressAnimation,
+                        builder: (context, child) {
+                          return LinearProgressIndicator(
+                            value: _progressAnimation.value,
+                            backgroundColor: Colors.transparent,
+                            valueColor: AlwaysStoppedAnimation(
+                              bannerColor.withAlpha(179),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

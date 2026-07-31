@@ -43,8 +43,7 @@ class DemoScreen extends StatelessWidget {
             'Shows information to the user',
             () => AppBanner.of(context).show(
               context,
-              'This is an info message',
-              config: const BannerConfig(message: 'This is an info message'),
+              const BannerConfig(message: 'This is an info message'),
             ),
           ),
           _buildDemoCard(
@@ -52,9 +51,8 @@ class DemoScreen extends StatelessWidget {
             'Indicates successful operation',
             () => AppBanner.of(context).show(
               context,
-              'Operation completed successfully!',
-              config: const BannerConfig(
-                message: 'Success!',
+              const BannerConfig(
+                message: 'Operation completed successfully!',
                 type: BannerType.success,
               ),
             ),
@@ -64,9 +62,8 @@ class DemoScreen extends StatelessWidget {
             'Alerts about potential issues',
             () => AppBanner.of(context).show(
               context,
-              'Warning: This action cannot be undone',
-              config: const BannerConfig(
-                message: 'Warning!',
+              const BannerConfig(
+                message: 'Warning: This action cannot be undone',
                 type: BannerType.warning,
               ),
             ),
@@ -76,9 +73,8 @@ class DemoScreen extends StatelessWidget {
             'Reports errors to the user',
             () => AppBanner.of(context).show(
               context,
-              'Error: Connection failed. Please try again.',
-              config: const BannerConfig(
-                message: 'Error occurred',
+              const BannerConfig(
+                message: 'Error: Connection failed. Please try again.',
                 type: BannerType.error,
               ),
             ),
@@ -90,8 +86,7 @@ class DemoScreen extends StatelessWidget {
             'Shows countdown progress bar',
             () => AppBanner.of(context).show(
               context,
-              'Downloading file...',
-              config: const BannerConfig(
+              const BannerConfig(
                 message: 'Downloading file...',
                 duration: Duration(seconds: 5),
                 showProgress: true,
@@ -105,9 +100,8 @@ class DemoScreen extends StatelessWidget {
             'Tap to trigger callback without dismissing',
             () => AppBanner.of(context).show(
               context,
-              'New version available!',
-              config: BannerConfig(
-                message: 'Update available!',
+              BannerConfig(
+                message: 'New version available!',
                 action: BannerAction(
                   label: 'UPDATE',
                   onTap: () {
@@ -126,9 +120,8 @@ class DemoScreen extends StatelessWidget {
             'Banner stays for 10 seconds',
             () => AppBanner.of(context).show(
               context,
-              'This banner stays for 10 seconds',
-              config: const BannerConfig(
-                message: 'Long duration banner',
+              const BannerConfig(
+                message: 'This banner stays for 10 seconds',
                 duration: Duration(seconds: 10),
                 showProgress: true,
               ),
@@ -139,9 +132,8 @@ class DemoScreen extends StatelessWidget {
             'Banner dismisses quickly',
             () => AppBanner.of(context).show(
               context,
-              'Quick dismiss after 1.5 seconds',
-              config: const BannerConfig(
-                message: 'Quick banner',
+              const BannerConfig(
+                message: 'Quick dismiss after 1.5 seconds',
                 type: BannerType.success,
                 duration: Duration(milliseconds: 1500),
               ),

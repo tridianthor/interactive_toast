@@ -35,16 +35,35 @@ void main() {
   );
 }
 
+## Usage
+
+```dart
+import 'package:interactive_toast/interactive_toast.dart';
+
+void main() {
+  runApp(
+    AppBanner(
+      controller: AppBannerController(),
+      child: MaterialApp(
+        home: MyApp(),
+      ),
+    ),
+  );
+}
+
 // Show a banner
-AppBanner.of(context).show(context, 'Hello, World!');
+AppBanner.of(context).show(
+  context,
+  const BannerConfig(message: 'Hello, World!'),
+);
 
 // With options
 AppBanner.of(context).show(
   context,
-  'Operation completed!',
-  config: BannerConfig(
+  BannerConfig(
+    message: 'Operation completed!',
     type: BannerType.success,
-    duration: Duration(seconds: 5),
+    duration: const Duration(seconds: 5),
     showProgress: true,
     action: BannerAction(
       label: 'UNDO',
